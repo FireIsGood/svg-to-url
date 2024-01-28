@@ -1,6 +1,7 @@
 /* Basic styles */
 body {
     min-height: 100dvh;
+    margin-bottom: 2rem;
     color: var(--fg-0);
     font-size: 18px;
 }
@@ -9,6 +10,10 @@ body {
 *::before,
 *::after {
     box-sizing: border-box;
+}
+/* Remove default margins (optional) */
+* {
+    margin: 0;
 }
 /* Fix line height and font rendering */
 body {
@@ -86,25 +91,25 @@ main {
     margin-inline: auto;
 }
 
-main > *:first-child {
-    margin-top: 0;
+.space-children > * + * {
+    margin-top: 1em;
 }
 
 button {
     border-radius: var(--border-radius-small) 0;
     border: 2px solid var(--fg-0);
     color: var(--fg-0);
-    background-color: var(--primary-1);
+    background-color: var(--primary-2);
 
     transition: all 40ms ease-out;
 
     &:not([disabled]) {
         &:hover,
         &:focus {
-            background-color: var(--primary-2);
+            background-color: var(--primary-3);
         }
         &:active {
-            background-color: var(--primary-3);
+            background-color: var(--primary-4);
         }
     }
     &[disabled] {

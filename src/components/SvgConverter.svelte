@@ -1,18 +1,20 @@
 <script lang="ts">
-    const invalidSvgString = "That's not a valid SVG";
+    let validSVG = false;
     let conversionType: number = 0;
 
     let inputText: string = "";
     let outputText: string = inputText;
 
+    function isValidSVG(text: string) {
+        return text.replaceAll(/\n/g, "").match(/^<svg.*<\/svg>$/) !== null;
+    }
+
     function convertToSVG(text: string, type: number) {
         // Check for validity
-        const validSvg =
-            text.replaceAll(/\n/g, "").match(/^<svg.*<\/svg>$/) !== null;
         if (text === "") {
             return "";
-        } else if (!validSvg) {
-            return invalidSvgString;
+        } else if (!validSVG) {
+            return "That's not a valid SVG";
         }
 
         // Convert to a safe version
@@ -33,19 +35,18 @@
     }
 
     $: {
+        validSVG = isValidSVG(inputText);
         outputText = convertToSVG(inputText, conversionType);
-        buttonDisabled = outputText === invalidSvgString || outputText === "";
     }
 
     // Copy functionality
 
     let copiedText: boolean = false;
-    let buttonDisabled: boolean = true;
     let previousTimer: number | undefined = undefined;
 
     function copyOutput() {
         // Check if the button is disabled
-        if (buttonDisabled) {
+        if (!validSVG) {
             return;
         }
 
@@ -62,51 +63,62 @@
     }
 </script>
 
-<div class="two-grid">
-    <div class="input-text">
-        <textarea
-            bind:value={inputText}
-            placeholder="Write your SVG here"
-            autocomplete="off"
-            autocorrect="off"
-            autocapitalize="off"
-            spellcheck="false"
-            rows="20"
-        />
+<div class="space-children">
+    <div class="two-grid">
+        <div class="input-text">
+            <textarea
+                bind:value={inputText}
+                placeholder="Write your SVG here"
+                autocomplete="off"
+                autocorrect="off"
+                autocapitalize="off"
+                spellcheck="false"
+                rows="20"
+            />
+        </div>
+
+        <div class="output-text">
+            <textarea
+                class:invalid={!validSVG}
+                bind:value={outputText}
+                placeholder="URL will appear here"
+                autocomplete="off"
+                autocorrect="off"
+                autocapitalize="off"
+                spellcheck="false"
+                readonly={true}
+                rows="20"
+            />
+            <button
+                on:click={copyOutput}
+                class="copy-button"
+                disabled={!validSVG}
+                >{copiedText ? "Text copied!" : "Copy"}</button
+            >
+        </div>
     </div>
 
-    <div class="output-text">
-        <textarea
-            class:invalid={outputText === invalidSvgString}
-            bind:value={outputText}
-            placeholder="URL will appear here"
-            autocomplete="off"
-            autocorrect="off"
-            autocapitalize="off"
-            spellcheck="false"
-            readonly={true}
-            rows="20"
-        />
-        <button
-            on:click={copyOutput}
-            class="copy-button"
-            disabled={buttonDisabled}
-            >{copiedText ? "Text copied!" : "Copy"}</button
-        >
+    <div>
+        <p>Preview:</p>
+        <div class="preview">
+            {#if validSVG}
+                {@html inputText}
+            {/if}
+        </div>
     </div>
+
+    <fieldset class="extra-options">
+        <legend>Mode:</legend>
+        <label>
+            <input type="radio" bind:group={conversionType} value={0} checked />
+            URL string
+        </label>
+        <label>
+            <input type="radio" bind:group={conversionType} value={1} />
+            background-image
+        </label>
+    </fieldset>
 </div>
-
-<fieldset class="extra-options">
-    <legend>Mode:</legend>
-    <label>
-        <input type="radio" bind:group={conversionType} value={0} checked />
-        URL string
-    </label>
-    <label>
-        <input type="radio" bind:group={conversionType} value={1} />
-        background-image
-    </label>
-</fieldset>
 
 <style>
     .two-grid {
@@ -135,5 +147,15 @@
         align-self: end;
         justify-self: end;
         z-index: 1;
+    }
+
+    .preview {
+        border-radius: var(--border-radius-small);
+        min-height: 150px;
+        border: 2px dashed;
+        padding: 8px;
+    }
+    .preview > * {
+        display: block;
     }
 </style>
