@@ -15,6 +15,7 @@
 
         // Convert to a safe version
         const safeText = text
+            .replaceAll(/\#/g, "%23") // Change question marks for
             .replaceAll(/\?/g, "%3F") // Change question marks for
             .replaceAll(/\s\s+/g, " ") // Change spaces to singular versions
             .replaceAll(/[\t\n\r]/g, "") // Remove other whitespace
