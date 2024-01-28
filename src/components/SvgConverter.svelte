@@ -41,6 +41,7 @@
 
     let copiedText: boolean = false;
     let buttonDisabled: boolean = true;
+    let previousTimer: number | undefined = undefined;
 
     function copyOutput() {
         // Check if the button is disabled
@@ -51,7 +52,11 @@
         // Copy via the weird API and show new text
         navigator.clipboard.writeText(outputText);
         copiedText = true;
-        setTimeout(() => {
+
+        if (previousTimer) {
+            clearTimeout(previousTimer);
+        }
+        previousTimer = setTimeout(() => {
             copiedText = false;
         }, 1000);
     }
