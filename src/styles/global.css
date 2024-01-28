@@ -1,7 +1,7 @@
 /* Basic styles */
 body {
     min-height: 100dvh;
-    color: #454545;
+    color: var(--fg-0);
     font-size: 18px;
 }
 /* Box sizing */
@@ -59,6 +59,26 @@ h6 {
     outline: 2px solid #e0a0ee;
 }
 
+/* Variables */
+:root {
+    /* Colors */
+    --fg-0: #3c3633;
+    --fg-1: #c6bfbc;
+
+    --bg0: #eeedeb;
+    --primary-1: #fff8f3;
+    --primary-2: #ffdfc6;
+    --primary-3: #d57300;
+    --primary-4: #ac5c00;
+    --primary-5: #633300;
+    --primary-6: #371d00;
+    --secondary-0: #e0ccbe;
+
+    /* Sizes */
+    --border-radius-small: 6px;
+    --border-radius-medium: 12px;
+}
+
 /* Main styles */
 main {
     --main-width: 1160px;
@@ -70,7 +90,51 @@ main > *:first-child {
     margin-top: 0;
 }
 
-/* Helper styles */
+button {
+    border-radius: var(--border-radius-small) 0;
+    border: 2px solid var(--fg-0);
+    color: var(--fg-0);
+    background-color: var(--primary-0);
+
+    &:not([disabled]) {
+        &:focus {
+            background-color: #f5f5f5;
+        }
+        &:active {
+            background-color: #eeeeee;
+        }
+    }
+    &[disabled] {
+        color: var(--fg-1);
+        border-color: var(--fg-1);
+        background-color: var(--primary-1);
+    }
+}
+
+/* Form styling */
+button,
+label,
+legend {
+    user-select: none;
+}
+
 textarea {
     display: block;
+    width: 100%;
+    border: 2px solid;
+    border-radius: var(--border-radius-small);
+    padding: 6px;
+    resize: none;
+}
+
+label {
+    display: block;
+}
+
+input {
+    margin: 0;
+}
+
+fieldset {
+    width: max-content;
 }
