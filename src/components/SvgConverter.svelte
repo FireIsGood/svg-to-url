@@ -79,7 +79,7 @@
 
         <div class="output-text">
             <textarea
-                class:invalid={!validSVG}
+                class:invalid={!validSVG && inputText !== ""}
                 bind:value={outputText}
                 placeholder="URL will appear here"
                 autocomplete="off"
