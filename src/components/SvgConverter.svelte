@@ -78,7 +78,7 @@
 </script>
 
 <div class="space-children">
-    <h1>SVG to URL encoder (ez)</h1>
+    <h1>SVG to URL</h1>
     <p>Literally what it says.</p>
 
     <div class="two-grid">
