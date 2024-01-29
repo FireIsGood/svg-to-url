@@ -2,6 +2,9 @@
 
 Literally what it says.
 
+The SVG functions are in the `src/scripts` folder if you want to double check my
+homework.
+
 ## Installation
 
 ### Prerequisites
@@ -60,7 +63,12 @@ There are additional commands you can run from the terminal:
 
 ## Contributing
 
-No.
+Feel free to make issues about any features you feel are both simple and
+important.
+
+Note that this project is **not** meant to be complex, so please don't ask me to
+do something like parse the SVG into an AST so you can resize the individual
+widths with a GUI. I will cry.
 
 ## License
 
