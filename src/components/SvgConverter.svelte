@@ -2,7 +2,7 @@
     import { ConversionType, convertToURL, testValidSVG } from "@/scripts/svg";
 
     // Options
-    let wrapOutput: boolean = false;
+    let wrapOutput: boolean = true;
     let conversionType: ConversionType = ConversionType.UrlString;
 
     // Binds to the text boxes
@@ -66,6 +66,15 @@
         { name: "Backgorund image", value: ConversionType.BackgroundImage, default: false },
         { name: "Boilerplate", value: ConversionType.Boilerplate, default: false },
     ];
+
+    function handleModeChange(mode: ConversionType) {
+        // Disable wrapping for multi-line output types
+        if (mode === ConversionType.Boilerplate) {
+            wrapOutput = false;
+        } else {
+            wrapOutput = true;
+        }
+    }
 </script>
 
 <div class="space-children">
@@ -131,6 +140,7 @@
                         bind:group={conversionType}
                         value={mode.value}
                         checked={mode.default}
+                        on:change={() => handleModeChange(mode.value)}
                     />
                     {mode.name}
                 </label>
