@@ -1,4 +1,13 @@
 {
+    "trailingComma": "es5",
     "tabWidth": 4,
-    "useTabs": false
+    "useTabs": false,
+    "overrides": [
+        {
+            "files": "tsconfig.json",
+            "options": {
+                "trailingComma": "none"
+            }
+        }
+    ]
 }
