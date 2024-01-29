@@ -6,6 +6,18 @@ import SvgConverter from "@/components/SvgConverter.svelte";
 
 <html lang="en">
     <Head />
+
+    <!-- A little trolling -->
+    <script is:inline>
+        const randomValue = Math.floor(Math.random() * 100 + 1);
+
+        // 1/100 chance to rick roll
+        if (randomValue >= 100) {
+            window.location.replace(
+                "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            );
+        }
+    </script>
     <body>
         <main class="space-children">
             <SvgConverter client:load />
