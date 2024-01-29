@@ -1,33 +1,37 @@
 /* Basic styles */
+/* Fix fonts and stuff */
 body {
-    min-height: 100dvh;
-    margin-bottom: 2rem;
     color: var(--fg-0);
     font-size: 18px;
+    font-family: system-ui, sans-serif;
 }
+
 /* Box sizing */
 *,
 *::before,
 *::after {
     box-sizing: border-box;
 }
+
 /* Remove default margins (optional) */
 * {
     margin: 0;
 }
+
 /* Fix line height and font rendering */
 body {
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
 }
+
 /* Fix media defaults */
 img,
 picture,
 video,
 canvas,
 svg {
-    max-width: 100%;
-    max-height: 100%;
+    /* max-width: 100%; */
+    /* max-height: 100%; */
     height: auto;
     vertical-align: middle;
     font-style: italic;
@@ -40,6 +44,7 @@ select {
     color: inherit;
     font: inherit;
 }
+
 /* Fix text overflow */
 p,
 h1,
@@ -50,6 +55,7 @@ h5,
 h6 {
     overflow-wrap: break-word;
 }
+
 /* Fix link colors */
 :where(a) {
     color: #03f;
@@ -59,18 +65,40 @@ h6 {
     color: #7d013e;
 }
 
+/* Fancy scrollbars */
+::-webkit-scrollbar {
+    background: var(--bg-1);
+    width: 12px;
+}
+
+::-webkit-scrollbar-corner {
+    background: var(--bg-1);
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--fg-2);
+    background-clip: padding-box;
+    border: solid transparent;
+    border-width: 2px;
+    border-radius: var(--border-radius-medium);
+}
+
 /* Improve focus styles */
 :focus-visible {
-    outline: 2px solid #e0a0ee;
+    outline: 2px solid var(--primary-3);
+    outline-offset: 2px;
 }
 
 /* Variables */
 :root {
     /* Colors */
     --fg-0: #3c3633;
-    --fg-1: #c6bfbc;
+    --fg-1: #867972;
+    --fg-2: #bdb5b1;
 
-    --bg0: #eeedeb;
+    --bg-0: #eeedeb;
+    --bg-1: #e5e3e0;
+
     --primary-1: #fff8f3;
     --primary-2: #ffdfc6;
     --primary-3: #d57300;
@@ -78,6 +106,21 @@ h6 {
     --primary-5: #633300;
     --primary-6: #371d00;
     --secondary-0: #e0ccbe;
+
+    /* colors */
+    --red-1: #fff8f6;
+    --red-2: #ffddd8;
+    --red-3: #ff4647;
+    --red-4: #e0002b;
+    --red-5: #830014;
+    --red-6: #530003;
+
+    --emerald-1: #dcffe6;
+    --emerald-2: #5dffa2;
+    --emerald-3: #00a05a;
+    --emerald-4: #008147;
+    --emerald-5: #004825;
+    --emerald-6: #002812;
 
     /* Sizes */
     --border-radius-small: 6px;
@@ -87,7 +130,7 @@ h6 {
 /* Main styles */
 main {
     --main-width: 1160px;
-    width: min(var(--main-width) - 2rem, 100%);
+    width: min(var(--main-width), 100% - 2rem);
     margin-inline: auto;
 }
 
@@ -99,22 +142,23 @@ button {
     border-radius: var(--border-radius-small) 0;
     border: 2px solid var(--fg-0);
     color: var(--fg-0);
-    background-color: var(--primary-2);
+    background-color: var(--primary-1);
+    cursor: pointer;
 
     transition: all 40ms ease-out;
 
     &:not([disabled]) {
         &:hover,
         &:focus {
-            background-color: var(--primary-3);
+            background-color: var(--primary-2);
         }
         &:active {
-            background-color: var(--primary-4);
+            background-color: var(--primary-3);
         }
     }
     &[disabled] {
         color: var(--fg-1);
-        border-color: var(--fg-1);
+        border-color: var(--fg-2);
         background-color: var(--primary-1);
     }
 }
@@ -145,4 +189,5 @@ input {
 
 fieldset {
     width: max-content;
+    height: max-content;
 }

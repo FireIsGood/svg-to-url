@@ -1,46 +1,29 @@
 <script lang="ts">
-    let validSVG = false;
-    let conversionType: number = 0;
+    import { ConversionType, convertToURL, testValidSVG } from "@/scripts/svg";
 
+    // Options
+    let wrapOutput: boolean = false;
+    let conversionType: ConversionType = ConversionType.UrlString;
+
+    // Binds to the text boxes
     let inputText: string = "";
-    let outputText: string = inputText;
+    let outputText: string;
+    $: outputText = convertToURL(inputText, conversionType);
 
-    function isValidSVG(text: string) {
-        return text.replaceAll(/\n/g, "").match(/^<svg.*<\/svg>$/) !== null;
-    }
-
-    function convertToSVG(text: string, type: number) {
-        // Check for validity
-        if (text === "") {
-            return "";
-        } else if (!validSVG) {
-            return "That's not a valid SVG";
-        }
-
-        // Convert to a safe version
-        const safeText = text
-            .replaceAll(/\#/g, "%23") // Change question marks for
-            .replaceAll(/\?/g, "%3F") // Change question marks for
-            .replaceAll(/\s\s+/g, " ") // Change spaces to singular versions
-            .replaceAll(/[\t\n\r]/g, "") // Remove other whitespace
-            .replaceAll(/\'/g, '"') // Replace single quotes with double quotes
-            .replaceAll(/> </g, "><"); // Remove space between tags
-
-        // Conversion types
-        let formattedOutput = `url('data:image/svg+xml,${safeText}')`;
-        if (type === 1) {
-            formattedOutput = `background-image: ${formattedOutput}`;
-        }
-        return formattedOutput;
-    }
-
+    // Info about the input
+    let notBlankSVG: boolean;
+    $: notBlankSVG = inputText !== "";
+    let validSVG: boolean;
+    $: validSVG = testValidSVG(inputText);
+    let sizedSVG: boolean;
     $: {
-        validSVG = isValidSVG(inputText);
-        outputText = convertToSVG(inputText, conversionType);
+        let hasWidthOrHeight =
+            inputText.match(/^<svg[^>]+((\swidth="\d+")|(\sheight="\d+"))/) !==
+            null;
+        sizedSVG = validSVG && hasWidthOrHeight;
     }
 
     // Copy functionality
-
     let copiedText: boolean = false;
     let previousTimer: number | undefined = undefined;
 
@@ -61,63 +44,109 @@
             copiedText = false;
         }, 1000);
     }
+
+    // Output click to copy
+    function handleOutputClick(e: Event) {
+        if (!validSVG) {
+            return;
+        }
+        (e.target as HTMLInputElement).select();
+    }
+
+    // Modes
+    type ConversionTypeChoice = {
+        name: string;
+        value: ConversionType;
+        default: boolean;
+    };
+
+    // prettier-ignore
+    const modes: ConversionTypeChoice[] = [
+        { name: "URL String", value: ConversionType.UrlString, default: true },
+        { name: "Backgorund image", value: ConversionType.BackgroundImage, default: false },
+        { name: "Boilerplate", value: ConversionType.Boilerplate, default: false },
+    ];
 </script>
 
 <div class="space-children">
+    <h1>SVG to URL encoder (ez)</h1>
+    <p>Literally what it says.</p>
+
     <div class="two-grid">
         <div class="input-text">
+            <p>Input</p>
             <textarea
                 bind:value={inputText}
-                placeholder="Write your SVG here"
+                placeholder="Write your SVG here..."
                 autocomplete="off"
                 autocorrect="off"
                 autocapitalize="off"
                 spellcheck="false"
-                rows="20"
+                rows="15"
             />
         </div>
 
         <div class="output-text">
-            <textarea
-                class:invalid={!validSVG && inputText !== ""}
-                bind:value={outputText}
-                placeholder="URL will appear here"
-                autocomplete="off"
-                autocorrect="off"
-                autocapitalize="off"
-                spellcheck="false"
-                readonly={true}
-                rows="20"
-            />
-            <button
-                on:click={copyOutput}
-                class="copy-button"
-                disabled={!validSVG}
-                >{copiedText ? "Text copied!" : "Copy"}</button
-            >
+            <div class="title-spread">
+                <p>Output</p>
+                <label>
+                    <input type="checkbox" bind:checked={wrapOutput} />
+                    Wrap text
+                </label>
+            </div>
+            <div class="overlay">
+                <textarea
+                    class:invalid={!validSVG && notBlankSVG}
+                    class:valid={validSVG && notBlankSVG}
+                    class:no-wrap-output={!wrapOutput}
+                    bind:value={outputText}
+                    on:click={(e) => handleOutputClick(e)}
+                    placeholder="URL will appear here!"
+                    autocomplete="off"
+                    autocorrect="off"
+                    autocapitalize="off"
+                    spellcheck="false"
+                    readonly={true}
+                    rows="15"
+                />
+                {#if validSVG}
+                    <button
+                        on:click={copyOutput}
+                        class="copy-button"
+                        disabled={!validSVG}
+                        >{copiedText ? "Text copied!" : "Copy"}</button
+                    >
+                {/if}
+            </div>
         </div>
     </div>
 
-    <div>
-        <p>Preview:</p>
-        <div class="preview">
-            {#if validSVG}
-                {@html inputText}
-            {/if}
+    <div class="two-grid">
+        <fieldset class="extra-options">
+            <legend>Mode:</legend>
+            {#each modes as mode}
+                <label>
+                    <input
+                        type="radio"
+                        bind:group={conversionType}
+                        value={mode.value}
+                        checked={mode.default}
+                    />
+                    {mode.name}
+                </label>
+            {/each}
+        </fieldset>
+        <div class="preview-box" class:shrink-to-fit={sizedSVG}>
+            <p>Preview{validSVG && !sizedSVG ? " (No max size)" : ""}:</p>
+            <div class="preview-inner">
+                {#if validSVG}
+                    {@html inputText}
+                {/if}
+            </div>
         </div>
     </div>
 
-    <fieldset class="extra-options">
-        <legend>Mode:</legend>
-        <label>
-            <input type="radio" bind:group={conversionType} value={0} checked />
-            URL string
-        </label>
-        <label>
-            <input type="radio" bind:group={conversionType} value={1} />
-            background-image
-        </label>
-    </fieldset>
+    <p>Made with 🔥 by FireIsGood</p>
 </div>
 
 <style>
@@ -127,16 +156,31 @@
         gap: 1rem;
     }
 
-    .invalid {
-        color: red;
+    .output-text {
+        & .valid {
+            color: var(--emerald-3);
+        }
+        & .invalid {
+            color: var(--red-3);
+        }
+
+        & textarea.no-wrap-output {
+            text-wrap: nowrap;
+            overflow-x: auto;
+        }
     }
 
-    .output-text {
+    .title-spread {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .overlay {
         display: grid;
         grid-template-columns: 1fr;
     }
 
-    .output-text > * {
+    .overlay > * {
         grid-column-start: 1;
         grid-row-start: 1;
     }
@@ -149,13 +193,35 @@
         z-index: 1;
     }
 
-    .preview {
-        border-radius: var(--border-radius-small);
-        min-height: 150px;
-        border: 2px dashed;
-        padding: 8px;
+    fieldset {
+        margin-inline: auto;
     }
-    .preview > * {
+
+    .preview-box {
+        --preview-size: 250px;
+        --max-size: 400px;
+        min-width: var(--preview-size);
+        max-width: 100%;
+        max-height: var(--max-size);
+        padding: 8px;
+        margin-inline: auto;
+        border: 2px solid;
+        border-radius: var(--border-radius-small);
+        overflow: auto;
+    }
+
+    .shrink-to-fit {
+        display: grid;
+        grid-template-rows: auto 1fr;
+        place-items: start;
+    }
+
+    .preview-inner:not(:empty) {
+        border: 2px dashed;
+        border-radius: var(--border-radius-small);
+    }
+
+    .preview-inner :global(svg) {
         display: block;
     }
 </style>
