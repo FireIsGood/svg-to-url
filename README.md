@@ -5,6 +5,9 @@ Literally what it says.
 The SVG functions are in the `src/scripts` folder if you want to double check my
 homework.
 
+<details>  
+<summary>If you want to develop this (why though?)</summary>
+
 ## Installation
 
 ### Prerequisites
@@ -60,6 +63,8 @@ There are additional commands you can run from the terminal:
 | `pnpm preview`         | Preview your build locally, before deploying     |
 | `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
 | `pnpm astro -- --help` | Get help using the Astro CLI                     |
+
+</details>
 
 ## Contributing
 
