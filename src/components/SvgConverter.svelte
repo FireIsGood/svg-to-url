@@ -69,7 +69,10 @@
 
     function handleModeChange(mode: ConversionType) {
         // Disable wrapping for multi-line output types
-        if (mode === ConversionType.Boilerplate) {
+        if (
+            mode === ConversionType.Boilerplate ||
+            mode === ConversionType.BackgroundImage
+        ) {
             wrapOutput = false;
         } else {
             wrapOutput = true;
