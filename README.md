@@ -5,10 +5,10 @@ Literally what it says.
 The SVG functions are in the `src/scripts` folder if you want to double check my
 homework.
 
+## Installation
+
 <details>  
 <summary>If you want to develop this (why though?)</summary>
-
-## Installation
 
 ### Prerequisites
 
