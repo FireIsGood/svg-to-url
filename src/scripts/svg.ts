@@ -43,7 +43,7 @@ export function convertToURL(text: string, type: ConversionType) {
 /* background-color: #ffffff; */
 background-image: ${urlWrapper};
 /* background-origin: border-box | padding-box | content-box; */
-/* background-position: center | top 10px left 20px; */\
+/* background-position: center | top 10px left 20px; */
 /* background-repeat: no-repeat; */
 /* background-size: cover | contain | 400px | 50% 25%; */\
 `;
